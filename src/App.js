@@ -6,7 +6,6 @@ function App() {
   const [content, setContent] = useState("");
   const [todos, setTodos] = useState([]);
   const [isDone, setIsDone] = useState(false);
-  const [divide, setDivide] = useState(1);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -16,19 +15,22 @@ function App() {
     setContent(e.target.value);
   };
 
-  const handleAddTodo = () => {
-    if (title && content) {
-      const newTodo = {
-        id: divide,
-        title,
-        content,
-        isDone,
-      };
+  const todoList = () => {
+    let newTodo = {
+      id: todos.length === 0 ? todos.length : todos[todos.length - 1].id + 1,
+      title,
+      content,
+      isDone,
+    };
+    if (title === "") {
+      alert("제목을 입력해주세요.");
+    } else if (content === "") {
+      alert("내용을 입력해주세요.");
+    } else {
       setTodos([...todos, newTodo]);
       setTitle("");
       setContent("");
       setIsDone(false);
-      setDivide(divide + 1);
     }
   };
 
@@ -70,41 +72,45 @@ function App() {
             onChange={handleContentChange}
           />
         </div>
-        <button onClick={handleAddTodo}>추가하기</button>
+        <button onClick={todoList}>추가하기</button>
       </div>
-      <div className="Working">
-        <h2>Working</h2>
+      <div className="WorkingBox">
+        <div className="Working">
+          <h2>Working</h2>
+        </div>
+        <div className="container1">
+          {todos.map((todo, index) =>
+            !todo.isDone ? (
+              <div key={index} className="todo">
+                <h3>{todo.title}</h3>
+                <p>{todo.content}</p>
+                <button onClick={() => handleToggleTodoStatus(index)}>
+                  {todo.isDone ? "취소" : "완료"}
+                </button>
+                <button onClick={() => DeleteTodo(index)}>삭제</button>
+              </div>
+            ) : null
+          )}
+        </div>
       </div>
-      <div className="container1">
-        {todos.map((todo, index) =>
-          !todo.isDone ? (
-            <div key={index} className="todo">
-              <h3>{todo.title}</h3>
-              <p>{todo.content}</p>
-              <button onClick={() => handleToggleTodoStatus(index)}>
-                {todo.isDone ? "취소" : "완료"}
-              </button>
-              <button onClick={() => DeleteTodo(index)}>삭제</button>
-            </div>
-          ) : null
-        )}
-      </div>
-      <div className="Done">
-        <h2>Done</h2>
-      </div>
-      <div className="container2">
-        {todos.map((todo, index) =>
-          todo.isDone ? (
-            <div key={index} className="todo">
-              <h3>{todo.title}</h3>
-              <p>{todo.content}</p>
-              <button onClick={() => handleToggleTodoStatus(index)}>
-                {todo.isDone ? "취소" : "완료"}
-              </button>
-              <button onClick={() => DeleteTodo(index)}>삭제</button>
-            </div>
-          ) : null
-        )}
+      <div className="DoneBox">
+        <div className="Done">
+          <h2>Done</h2>
+        </div>
+        <div className="container2">
+          {todos.map((todo, index) =>
+            todo.isDone ? (
+              <div key={index} className="todo">
+                <h3>{todo.title}</h3>
+                <p>{todo.content}</p>
+                <button onClick={() => handleToggleTodoStatus(index)}>
+                  {todo.isDone ? "취소" : "완료"}
+                </button>
+                <button onClick={() => DeleteTodo(index)}>삭제</button>
+              </div>
+            ) : null
+          )}
+        </div>
       </div>
     </div>
   );
